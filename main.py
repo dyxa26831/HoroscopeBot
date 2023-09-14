@@ -25,8 +25,7 @@ orgs = {
 }  # Словарь для добавление кнопок и определения сайта
 
 
-@bot.message_handler(commands=["start"])
-def start(message):
+def button():
     global markup
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)  # Инициализация кнопки
     global a
@@ -34,6 +33,11 @@ def start(message):
     for key in orgs:  # Добавление текста в кнопку
         a.append(types.KeyboardButton(key))
     markup.add(*a, row_width=2)
+
+
+@bot.message_handler(commands=["start"])
+def start(message):
+    button()
     bot.send_message(
         message.chat.id,
         "Давай узнаем твой гороскоп на сегодня, кто ты по знаку зодиака?",
@@ -43,6 +47,7 @@ def start(message):
 
 @bot.message_handler(content_types=["text"])
 def sendHoroscope(message):
+    button()
     if message.text in orgs:  # Защита от неправильного ввода
         horoscope = orgs[message.text]
         url = f"https://horo.mail.ru/prediction/{horoscope}/today/"  # Инициализация сайта для парсинга
